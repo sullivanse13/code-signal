@@ -2,6 +2,26 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+(defn digits [x]
+  (if (= x 0)
+    ()
+    (cons (mod x 10) (digits (quot x 10))))
+  )
+
+(defn increaseNumberRoundness
+  [n]
+  (not (empty? (drop-while #(not= 0 %) (drop-while zero? (digits n)))))
+  )
+
+
+
+(deftest increaseNumberRoundnessTest
+  (testing increaseNumberRoundness)
+  (is (not (increaseNumberRoundness 0)))
+  (is (not (increaseNumberRoundness 10)))
+  (is (increaseNumberRoundness 1010))
+
+  )
 
 
 (defn calcApples
