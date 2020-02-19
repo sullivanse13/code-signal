@@ -2,6 +2,221 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+(defn removeArrayPart
+  [inputArray l r]
+  (concat (take l inputArray) (drop (inc r) inputArray))
+  )
+
+
+(deftest removeArrayPartTest
+  (testing removeArrayPart)
+  (is (= [1] (removeArrayPart [0 1] 0 0)))
+  (is (= [0] (removeArrayPart [0 1] 1 1)))
+  )
+
+
+(defn concatenateArrays [a b]
+  (concat a b))
+
+(defn firstReverseTry
+  [arr]
+  (if (<= (count arr) 1)
+      arr
+      (flatten (list (last arr) (drop-last (rest arr)) (first arr)))
+  )
+  )
+
+(deftest firstReverseTryTest
+  (testing firstReverseTry)
+  (is (= [] (firstReverseTry [])))
+  (is (= [2] (firstReverseTry [2])))
+  (is (= [0 0] (firstReverseTry [0 0])))
+  (is (= [1 0] (firstReverseTry [0 1])))
+  (is (= [1 2 0] (firstReverseTry [0 2 1])))
+  )
+
+
+(defn myReplace
+  [elemToReplace substitutionElem x]
+  (if (= x elemToReplace)
+    substitutionElem
+    x
+    )
+  )
+
+(defn arrayReplace [inputArray elemToReplace substitutionElem]
+  (map #(myReplace elemToReplace substitutionElem %) inputArray))
+
+
+(deftest arrayReplaceTest
+  (testing arrayReplace)
+  (is (= [0] (arrayReplace [0] 0 0)))
+  (is (= [1] (arrayReplace [0] 0 1)))
+  (is (= [3 2 3] (arrayReplace [1 2 1] 1 3)))
+  )
+
+
+
+(defn createArray [size] (repeat size 1))
+
+
+
+
+(defn countBlackCells [m n]
+  (- (+ m n (.gcd (biginteger m) (biginteger n))) 2)
+  )
+
+(deftest countBlackCellsTest
+  (testing countBlackCells)
+  (is (= 1 (countBlackCells 1 1)))
+  (is (= 4 (countBlackCells 2 2)))
+  (is (= 25 (countBlackCells 1 25)))
+  (is (= 7 (countBlackCells 3 3)))
+  )
+
+
+
+
+(defn candles
+  ([candlesNumber makeNew] (candles candlesNumber makeNew 0))
+  ([candlesNumber makeNew leftovers]
+   (let [candleNubs (+ candlesNumber leftovers)
+         candlesFromBurnedAndLeftovers (quot candleNubs makeNew)
+         remainingLeftovers (rem candleNubs makeNew)]
+     (if (and (zero? candlesFromBurnedAndLeftovers) (< remainingLeftovers makeNew))
+       candlesNumber
+      (+ candlesNumber (candles candlesFromBurnedAndLeftovers makeNew remainingLeftovers))
+     ))
+  ))
+
+(deftest candlesTest
+  (testing candles)
+  (is (zero? (candles 0 2)))
+  (is (= 1 (candles 1 2)))
+  (is (= 3 (candles 2 2)))
+  (is (= 9 (candles 5 2)))
+  )
+
+
+   ;(let [newCandles (quot candlesNumber makeNew)]
+     ;  (prn candlesNumber newCandles)
+     ;(if (zero? newCandles)
+     ;  candlesNumber
+     ;  (+ candlesNumber (candles newCandles makeNew))
+     ;  ))
+
+
+
+
+(defn calcRoundingValue
+  [n tens]
+  (cond (zero? (mod n tens)) 0
+        (<= (/ tens (mod n tens)) 2) tens
+        :else 0)
+  )
+
+(defn dropValueToBeRounded
+  [n tens]
+  (- n (mod n tens))
+  )
+
+(defn round
+  [n tens]
+  (+ (dropValueToBeRounded n tens) (calcRoundingValue n tens))
+  )
+
+(defn rounders
+  ([n] (rounders n 10))
+  ([n tens]
+   (cond (< n 5) n
+         (= n tens) n
+         (zero? (mod n (* tens 10))) n
+         (and (not= 0 (mod n tens)) (<= (quot n tens) 10)) (round n tens)
+         :else (rounders (round n tens) (* 10 tens))))
+  )
+
+
+
+
+(deftest roundersTest
+  (testing rounders)
+  (is (zero? (rounders 0)))
+  (is (= 1 (rounders 1)))
+  (is (= 10 (rounders 5)))
+  (is (= 10 (rounders 10)))
+  (is (= 20 (rounders 15)))
+  (is (= 10 (rounders 14)))
+  (is (= 30 (rounders 25)))
+  (is (= 30 (rounders 25)))
+  (is (= 100 (rounders 95)))
+  (is (= 100 (rounders 101)))
+  (is (= 110 (rounders 105)))
+  (is (= 200 (rounders 190)))
+  (is (= 7000 (rounders 7001)))
+
+  )
+
+
+
+
+
+(deftest roundTest
+  (test round)
+  (is (= 0 (round 0 10)))
+  (is (= 0 (round 4 10)))
+  (is (= 10 (round 5 10)))
+  (is (= 10 (round 10 10)))
+  (is (= 20 (round 15 10)))
+  (is (= 150 (round 154 10)))
+  (is (= 160 (round 155 10)))
+  (is (= 200 (round 150 100)))
+  (is (= 100 (round 140 100)))
+  )
+
+
+
+
+(deftest dropValueToBeRoundedTest
+  (testing dropValueToBeRounded)
+  (is (= 10 (dropValueToBeRounded 10 10)))
+  (is (= 0 (dropValueToBeRounded 0 10)))
+  (is (= 0 (dropValueToBeRounded 1 10)))
+  (is (= 10 (dropValueToBeRounded 10 10)))
+  (is (= 10 (dropValueToBeRounded 12 10)))
+  (is (= 100 (dropValueToBeRounded 100 100)))
+  (is (= 100 (dropValueToBeRounded 120 100)))
+  )
+
+(deftest calcRoundingValueTest
+  (testing calcRoundingValue)
+  (is (= 0 ( calcRoundingValue 10 10)))
+  (is (= 0 ( calcRoundingValue 4 10)))
+  (is (= 10 ( calcRoundingValue 5 10)))
+  (is (= 10 ( calcRoundingValue 15 10)))
+  (is (= 0 ( calcRoundingValue 14 10)))
+  (is (= 0 ( calcRoundingValue 140 100)))
+  (is (= 100 ( calcRoundingValue 150 100)))
+  (is (= 1000 ( calcRoundingValue 1500 1000)))
+  )
+
+
+;
+;(defn roundWrong
+;  [n tens]
+;  (let [nModTens (mod n tens)
+;        nQuotTens (* (quot n tens) tens)]
+;    (cond (zero? n) 0
+;          (<= (/ tens n) 2) (+ tens nModTens)
+;          :else 0)))
+
+;(let [modNTens (mod n tens)
+      ;      roundmod (round n tens)
+      ;      qt (quot n tens)
+      ;      nMinusMod (- n modNTens)]
+      ;  (if (< n 10)
+      ;    roundmod
+      ;    (+ nMinusMod roundmod))
+
 (defn digits [x]
   (if (= x 0)
     ()
@@ -595,3 +810,17 @@
 ;  (is (= [[\a] [\c \b]] (splitOnLastOpenParen "a(bc)d" (getUntilNextCloseParen "a(bc)d"))))
 ;  (is (= [[] [\c \b]] (splitOnLastOpenParen "(bc)" (getUntilNextCloseParen "(bc)"))))
 ;  )
+
+
+
+(defn stop
+  [n tens]
+  (> 0 (- n tens)))
+
+(deftest stopTest
+  (testing stop)
+  (is (stop 50 100))
+  (is (not (stop 190 100)))
+  (is (not (stop 15 10)))
+  )
+
