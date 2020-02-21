@@ -7,6 +7,39 @@
 
 (require '[clojure.string :as str])
 
+(let [a 7]
+  (take 5 (iterate #(mod % 2) a)))
+
+(let [a 4
+      p 2]
+  (cond (= p (/ a p)) true
+        :else false
+        ))
+
+
+
+(let [a [1 3 5]]
+  (reduce + (map (fn [[a b]] (dec (- b a))) (partition 2 1 a)))
+  )
+
+
+(let [a [1 2 3 5 6]
+      mid (quot (count a) 2)
+      [f s] (split-at mid a)]
+  (if (= (count f) (count s))
+    (concat (drop-last f) [(+ (last f) (first s))] (drop 1 s))
+    a)
+  )
+
+
+(let [a [2 1 1 2]]
+  (let [c (count a)]
+    (take (if (odd? c) 1 2) (drop (int (/ (dec c) 2)) a))))
+
+(if (odd? (count [2 1 1 2])) 1 2)
+
+(int (/ (dec 5) 2))
+
 
 (let [a [0 1]
       l 0

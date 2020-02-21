@@ -2,6 +2,78 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+(defn isPower
+  [n]
+  (loop [x n
+         p 2]
+    (cond (= 1 n) true
+          (= p (/ x p)) true
+          (> p (/ n 2)) false
+          (zero? (mod x p)) (recur (/ x p) p)
+          :else (recur n (inc p))
+          )))
+
+
+(deftest isPowerTest
+  (testing isPower)
+  (is (isPower 1))
+  (is (not (isPower 3)))
+  (is (not (isPower 2)))
+  (is (isPower 4))
+  (is (not (isPower 6)))
+  (is (isPower 9))
+  (is (isPower 8))
+  (is (not (isPower 72)))
+  (is (isPower 100))
+  )
+
+(defn makeArrayConsecutive2
+  [statues]
+  (reduce + (map (fn [[a b]] (dec (- b a))) (partition 2 1 (sort statues)))))
+
+(deftest makeArrayConsecutive2Test
+  (testing makeArrayConsecutive2)
+  (is (= 0 (makeArrayConsecutive2 [1 2])))
+  (is (= 1 (makeArrayConsecutive2 [1 3])))
+  )
+
+(defn replaceMiddle
+  [a]
+  (let [mid (quot (count a) 2)
+        [f s] (split-at mid a)]
+    (if (= (count f) (count s))
+      (concat (drop-last f) [(+ (last f) (first s))] (drop 1 s))
+      a)
+    )
+  )
+
+(deftest replaceMiddleTest
+  (testing replaceMiddle)
+  (is (= [1 2 3] (replaceMiddle [1 2 3])))
+  (is (= [1 4 3] (replaceMiddle [1 2 2 3])))
+  )
+
+(defn sumMiddle
+  [a]
+  (let [c (count a)]
+    (reduce + (take (if (odd? c) 1 2) (drop (int (/ (dec c) 2)) a))))
+  )
+
+(defn isSmooth
+  [xs]
+  (= (first xs) (last xs) (sumMiddle xs))
+  )
+
+(deftest isSmoothTest
+  (testing isSmooth)
+  (is (not (isSmooth [1 2])))
+  (is (isSmooth [1 1 1]))
+  (is (isSmooth [2 1 1 2]))
+  )
+
+
+
+
 (defn removeArrayPart
   [inputArray l r]
   (concat (take l inputArray) (drop (inc r) inputArray))
