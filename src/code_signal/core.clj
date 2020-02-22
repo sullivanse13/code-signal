@@ -7,6 +7,24 @@
 
 (require '[clojure.string :as str])
 
+(defn digits [x]
+  (if (= x 0)
+    ()
+    (cons (mod x 10) (digits (quot x 10))))
+  )
+
+(defn sumOfSquareDigits
+  [x]
+  (reduce + (map #(* % %) (digits x))))
+
+(defn squareDigitsSequence [a0]
+  (loop [x a0
+         xs (set ())]
+    (if (contains? xs x)
+      (inc (count xs))
+      (recur (sumOfSquareDigits x) (conj xs x)))))
+
+
 (let [a 7]
   (take 5 (iterate #(mod % 2) a)))
 

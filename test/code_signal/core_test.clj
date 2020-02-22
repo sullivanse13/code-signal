@@ -2,6 +2,16 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+
+(deftest squareDigitsSequenceTest
+  (testing squareDigitsSequence)
+  (is (= 9 (squareDigitsSequence 16)))
+  (is (= 4 (squareDigitsSequence 103)))
+  (is (= 2 (squareDigitsSequence 1)))
+  )
+
+
+
 (defn isPower
   [n]
   (loop [x n
@@ -272,28 +282,7 @@
   )
 
 
-;
-;(defn roundWrong
-;  [n tens]
-;  (let [nModTens (mod n tens)
-;        nQuotTens (* (quot n tens) tens)]
-;    (cond (zero? n) 0
-;          (<= (/ tens n) 2) (+ tens nModTens)
-;          :else 0)))
 
-;(let [modNTens (mod n tens)
-      ;      roundmod (round n tens)
-      ;      qt (quot n tens)
-      ;      nMinusMod (- n modNTens)]
-      ;  (if (< n 10)
-      ;    roundmod
-      ;    (+ nMinusMod roundmod))
-
-(defn digits [x]
-  (if (= x 0)
-    ()
-    (cons (mod x 10) (digits (quot x 10))))
-  )
 
 (defn increaseNumberRoundness
   [n]
