@@ -13,6 +13,29 @@
     (cons (mod x 10) (digits (quot x 10))))
   )
 
+
+(defn subSequenceAddsToTotal
+  [max sequenceStart]
+  (prn max sequenceStart)
+  (reduce (fn f [a b]
+            (let [sum (+ a b)]
+              (if (>= sum max)
+                (reduced (if (= sum max) 1 0))
+                sum)))
+          (range sequenceStart max)))
+
+
+(defn isSumOfConsecutive2
+  [n]
+  (reduce + (map #(subSequenceAddsToTotal n %) (range 1 (dec n))))
+  )
+
+
+(reduce + (map #(subSequenceAddsToTotal 10 %) (range 1 (dec 10))))
+(reduce + (map #(subSequenceAddsToTotal 9 %) (range 1 (dec 9))))
+
+
+
 (defn sumOfSquareDigits
   [x]
   (reduce + (map #(* % %) (digits x))))

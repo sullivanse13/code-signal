@@ -3,6 +3,28 @@
             [code-signal.core :refer :all]))
 
 
+
+(deftest isSumOfConsecutive2Test
+  (testing isSumOfConsecutive2)
+  (is (= 2 (isSumOfConsecutive2 9)))
+  )
+
+
+
+
+
+(deftest subSequenceAddsToTotalTest
+  (testing subSequenceAddsToTotal)
+  (is (= 1 (subSequenceAddsToTotal 3 1)))
+  (is (= 1 (subSequenceAddsToTotal 10 1)))
+  (is (= 1 (subSequenceAddsToTotal 9 2)))
+  (is (= 1 (subSequenceAddsToTotal 9 4)))
+  (is (= 0 (subSequenceAddsToTotal 10 2)))
+  (is (= 0 (subSequenceAddsToTotal 9 1)))
+  )
+
+
+
 (deftest squareDigitsSequenceTest
   (testing squareDigitsSequence)
   (is (= 9 (squareDigitsSequence 16)))
