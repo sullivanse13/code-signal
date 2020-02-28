@@ -2,6 +2,57 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+(deftest processDirTest
+  (testing processDir)
+  (is (= [""] (processDir [""] [])))
+  (is (= ["" "a"] (processDir ["a"] [""])))
+  (is (= [] (processDir [".."] [""])))
+  (is (= [""] (processDir [".."] ["" "a"])))
+  (is (= [""] (processDir ["" "home"] [])))
+  (is (= ["" "home" "abc"] (processDir ["abc"] ["" "home"])))
+  (is (= ["" "home"] (processDir ["."] ["" "home"])))
+  )
+
+
+(deftest simplifyPathTest
+  (testing simplifyPath)
+  (is (= "/" (simplifyPath "/")))
+  (is (= "/a" (simplifyPath "/a")))
+  (is (= "/a/b" (simplifyPath "/a/b")))
+  (is (= "/a/b/c" (simplifyPath "/a/b/./c")))
+  (is (= "/a" (simplifyPath "/a/b/..")))
+  (is (= "/home/foo" (simplifyPath "/home//foo/")))
+  (is (= "/home/foo" (simplifyPath "home//foo/")))
+  (is (= "/a" (simplifyPath "///a///")))
+  (is (= "/a" (simplifyPath "/a/./././././.")))
+  (is (= "/" (simplifyPath "/../")))
+  (is (= "/b" (simplifyPath "a/../../b/")))
+  (is (= "/K/BruP/RMplU" (simplifyPath "/////..///K/BruP/RMplU/././")))
+
+  )
+
+
+
+(deftest kthLargestElementTest
+  (testing kthLargestElement)
+  (is (= 1 (kthLargestElement [1] 1)))
+  (is (= 0 (kthLargestElement [0 1] 2)))
+  (is (= 1 (kthLargestElement [0 1] 1)))
+  (is (= 6 (kthLargestElement [7, 6, 5, 4, 3, 2, 1] 2)))
+  (is (= 0 (kthLargestElement [-1, 2, 0] 2)))
+  )
+
+
+
+(deftest pagesNumberingWithInkTest
+  (testing pagesNumberingWithInk)
+  (is (= 1 (pagesNumberingWithInk 1 1)))
+  (is (= 22 (pagesNumberingWithInk 22 2)))
+  (is (= 5 (pagesNumberingWithInk 1 5)))
+  (is (= 22 (pagesNumberingWithInk 21 5)))
+  )
+
+
 
 
 (deftest isSumOfConsecutive2Test

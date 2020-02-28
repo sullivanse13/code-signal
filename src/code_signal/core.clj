@@ -5,7 +5,56 @@
   [x]
   (println x "Hello, World!"))
 
-(require '[clojure.string :as str])
+(require '[clojure.string :as string])
+
+
+(string/split "/home//foo/" #"/+")
+
+
+(string/replace "/home//foo/" #"^/" "")
+
+(string/split (string/replace "/home//foo/" #"^/" "") #"/+")
+
+
+
+(defn safe-pop
+  [xs]
+  (if (empty? xs)
+    []
+    (pop xs)))
+
+(defn processDir
+  [[next & _]
+   processedDirs]
+  (case next
+    ".." (safe-pop processedDirs)
+    "." processedDirs
+    (conj processedDirs next)
+    )
+  )
+
+
+(defn split-path
+  [path]
+  (string/split (string/replace path #"^/+" "") #"/+")
+  )
+
+(defn simplifyPath
+  ([path]
+   (loop [splitPath (split-path path)
+          processed []]
+     (if (empty? splitPath)
+       (str "/" (string/join "/" processed))
+       (recur (rest splitPath) (processDir splitPath processed)))
+     )))
+
+
+
+
+(defn kthLargestElement [nums k]
+  (nth (sort > nums) (dec k)))
+
+
 
 (defn digits [x]
   (if (= x 0)
@@ -14,9 +63,21 @@
   )
 
 
+(defn pagesNumberingWithInk [c n]
+  (loop [current c
+         numberOfDigits n
+         lastPrinted -1]
+    (let [digitsInCurrent (count (digits current))]
+      (if (< numberOfDigits digitsInCurrent)
+        lastPrinted
+        (recur (inc current) (- numberOfDigits digitsInCurrent) current)
+        ))
+    ))
+
+
+
 (defn subSequenceAddsToTotal
   [max sequenceStart]
-  (prn max sequenceStart)
   (reduce (fn f [a b]
             (let [sum (+ a b)]
               (if (>= sum max)
