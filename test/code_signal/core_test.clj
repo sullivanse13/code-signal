@@ -2,6 +2,67 @@
   (:require [clojure.test :refer :all]
             [code-signal.core :refer :all]))
 
+
+(deftest comfortableNumbers-test
+  (testing comfortableNumbers)
+  (is (= 0 (comfortableNumbers 0 0)))
+  (is (= 1 (comfortableNumbers 1 2)))
+  (is (= 2 (comfortableNumbers 10 12)))
+  (is (= 20 (comfortableNumbers 1 9)))
+  )
+
+
+
+(deftest combinations-test
+  (testing combinations-test)
+  (is (= [] (combinations 1 1)))
+  (is (= [[1 2]] (combinations 1 2)))
+  (is (= [[10 11] [10 12] [11 12]] (combinations 10 12)))
+  (is (= [[1 2] [1 3] [2 3]] (combinations 1 3)))
+  )
+
+(deftest comfortable-with?-test
+  (testing comfortable-with?)
+  (is (comfortable-with? 1 2))
+  (is (comfortable-with? 10 9))
+  (is (comfortable-with? 10 11))
+  (is (comfortable-with? 11 9))
+  (is (comfortable-with? 11 10))
+  (is (comfortable-with? 11 12))
+  (is (comfortable-with? 11 13))
+  (is (not (comfortable-with? 10 10)))
+  (is (not (comfortable-with? 11 14)))
+  (is (not (comfortable-with? 11 8)))
+  )
+
+(deftest b-in-segment-test
+  (testing b-in-segment?)
+  (is (b-in-segment? 2 1))
+  (is (not (b-in-segment? 1 3)))
+  )
+
+
+(deftest sum-digits-test
+  (testing sum-digits)
+  (is (= 0 (sum-digits 0)))
+  (is (= 1 (sum-digits 1)))
+  (is (= 2 (sum-digits 11)))
+  (is (= 2 (sum-digits 20)))
+  )
+
+
+(deftest decideStringTest
+  (testing decodeString)
+  (is (= "" (decodeString "")))
+  (is (= "abc" (decodeString "abc")))
+  (is (= "abc" (decodeString "1[abc]")))
+  (is (= "abcabcabc" (decodeString "3[abc]")))
+  (is (= "qabcabcabc" (decodeString "q3[abc]")))
+  ;(is (= "abc" (decodeString "1[abc]1[xyz]")))
+  )
+
+
+
 (deftest processDirTest
   (testing processDir)
   (is (= [""] (processDir [""] [])))

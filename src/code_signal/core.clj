@@ -1,11 +1,60 @@
 (ns code-signal.core)
 
+(require '[clojure.string :as string])
+
+
+
+(defn digits [x]
+  (if (= x 0)
+    ()
+    (cons (mod x 10) (digits (quot x 10))))
+  )
+
+(defn sum-digits
+  [x]
+  (reduce + (digits x)))
+
+(def memo-sum-digits
+  (memoize sum-digits))
+
+(defn b-in-segment?
+  [a b]
+  (let [x (memo-sum-digits a)
+        lower (- a x)
+        upper (+ a x)]
+    (<= lower b upper))
+  )
+
+(defn comfortable-with-each-other?
+  [[a b]]
+  (if (and (not (= a b)) (b-in-segment? a b) (b-in-segment? b a))
+    1
+    0)
+  )
+
+
+(defn combinations
+  [l r]
+  (if (= l r)
+    []
+    (let [list-of-l (repeat l)
+          up-to-r (range (inc l) (inc r))]
+      (concat (map vector list-of-l up-to-r) (combinations (inc l) r))
+      ))
+  )
+
+(defn comfortableNumbers [l r]
+  (let [pairs (combinations l r)]
+    (reduce + (map comfortable-with-each-other? pairs)))
+  )
+
+
+
+
 (defn foo
   "I don't do a whole lot."
   [x]
   (println x "Hello, World!"))
-
-(require '[clojure.string :as string])
 
 
 (string/split "/home//foo/" #"/+")
@@ -15,7 +64,39 @@
 
 (string/split (string/replace "/home//foo/" #"^/" "") #"/+")
 
+(defn get-k-and-string
+  [x]
+  (let [split-on-open (string/split x #"\[")]
+    [(read-string (first split-on-open))
+     (string/join (drop-last (second split-on-open)))]
+    ))
 
+(defn replicateString [x]
+  (let [k (get-k-and-string x)]
+    (string/join (take (first k) (repeat (second k))))
+    ))
+
+(defn replicateAndReplaces
+  [s match]
+  (string/replace s match (replicateString match)))
+
+
+(defn decodeString [s]
+  (let [matches (re-find #"\d\[.*?\]" s)]
+    ;(prn s "-matchs-" matches)
+    (if matches
+      (replicateAndReplaces s matches)
+      s
+      ))
+
+  )
+
+
+
+(let [code "1[x]1[x]"
+      matcher (re-matcher #"\d\[.*?\]" code)]
+  (re-find matcher)
+  )
 
 (defn safe-pop
   [xs]
@@ -55,12 +136,6 @@
   (nth (sort > nums) (dec k)))
 
 
-
-(defn digits [x]
-  (if (= x 0)
-    ()
-    (cons (mod x 10) (digits (quot x 10))))
-  )
 
 
 (defn pagesNumberingWithInk [c n]
